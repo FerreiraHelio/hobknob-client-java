@@ -4,7 +4,7 @@
 
 ## Installation
 
-TODO
+TODO (mention Vagrantfile)
 
 ### Building
 

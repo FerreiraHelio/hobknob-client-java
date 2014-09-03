@@ -1,8 +1,5 @@
 package com.opentable.hobknob.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class HobknobClient {
 
     FeatureToggleCache _featureToggleCache;
@@ -30,4 +27,3 @@ public class HobknobClient {
         return value != null ? value : defaultValue;
     }
 }
-

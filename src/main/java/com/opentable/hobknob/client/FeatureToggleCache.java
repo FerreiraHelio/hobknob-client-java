@@ -25,15 +25,17 @@ public class FeatureToggleCache {
     }
 
     public void initialize(int cacheInitialisationTimeoutMs) throws Exception {
-        _timer.schedule(
-            new TimerTask() {
+        _timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
                     updateCache();
                 }
             }, 0, _updateIntervalMs);
 
-        _countDownLatch.await(cacheInitialisationTimeoutMs, TimeUnit.MILLISECONDS);
+        if (!_countDownLatch.await(cacheInitialisationTimeoutMs, TimeUnit.MILLISECONDS))
+        {
+            throw new Exception("Timed out waiting for cache to initialise");
+        }
 
         if (_updateException != null) {
             throw new Exception("Failed to update cache for the first time", _updateException);

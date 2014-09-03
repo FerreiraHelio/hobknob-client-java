@@ -10,11 +10,28 @@
     <packaging>jar</packaging>
 
     <name>hobknob-client-java</name>
+    <description>A Java client for Hobknob</description>
+    <url>https://github.com/opentable/hobknob-client-java</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <scm>
         <connection>scm:git:git://github.com/opentable/hobknob-client-java.git</connection>
-        <developerConnection>scm:git:git@github.com:opentable/hobknob-client-java.git</developerConnection>
     </scm>
+
+    <developers>
+        <developer>
+            <email>criddle@opentable.com</email>
+            <name>Chris Riddle</name>
+            <id>criddle</id>
+        </developer>
+    </developers>
 
     <dependencies>
         <dependency>
