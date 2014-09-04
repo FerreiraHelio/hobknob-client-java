@@ -50,7 +50,7 @@ Gets the boolean value of a feature toggle if it exists, otherwise throw excepti
 - `toggleName` the name of the toggle, used with the application name to get the feature toggle value
 
 
-### client.getOrDefault(String toggleName, bool defaultValue)
+### client.getOrDefault(String toggleName, boolean defaultValue)
 
 Gets the boolean value of a feature toggle if it exists, otherwise return the default value
 

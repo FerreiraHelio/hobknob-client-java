@@ -3,6 +3,7 @@ package com.opentable.hobknob.client;
 import mousio.etcd4j.EtcdClient;
 import org.junit.After;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashSet;
 
@@ -10,7 +11,7 @@ import static org.junit.Assert.fail;
 
 public class TestBase
 {
-    private EtcdClient _etcdClient;
+    protected EtcdClient _etcdClient;
     private HobknobClient _hobknobClient;
     private String _applicationName;
 
@@ -58,6 +59,11 @@ public class TestBase
         _applicationKeysToClearOnTearDown.add(applicationName);
     }
 
+    protected void given_a_toggle_is_removed(String applicationName, String toggleName) throws Exception {
+        String key = String.format("v1/toggles/%s/%s", applicationName, toggleName);
+        _etcdClient.delete(key).send().get();
+    }
+
     protected boolean when_I_get(String toggleName) throws Exception {
         _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
         return _hobknobClient.get(toggleName);
@@ -68,7 +74,12 @@ public class TestBase
     }
 
     protected boolean when_I_get_with_default(String toggleName, boolean defaultValue) throws Exception {
-        _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, 60000);
+        _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
         return _hobknobClient.getOrDefault(toggleName, defaultValue);
+    }
+
+    protected HobknobClient create_hobknob_client() throws Exception {
+        _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
+        return _hobknobClient;
     }
 }
