@@ -1,11 +1,9 @@
 package com.opentable.hobknob.client;
 
-import mousio.etcd4j.requests.EtcdKeyDeleteRequest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +12,7 @@ import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class CacheUpdates extends TestBase
+public class CacheUpdatesTest extends TestBase
 {
     @Before
     public void SetUp() throws Exception {

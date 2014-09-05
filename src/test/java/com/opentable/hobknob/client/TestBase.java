@@ -1,9 +1,9 @@
 package com.opentable.hobknob.client;
 
 import mousio.etcd4j.EtcdClient;
+
 import org.junit.After;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.HashSet;
 

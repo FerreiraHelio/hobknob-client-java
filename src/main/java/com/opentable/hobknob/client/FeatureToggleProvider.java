@@ -22,7 +22,7 @@ public class FeatureToggleProvider
 
         // todo: handle errors
 
-        HashMap<String,Boolean> hashMap = new HashMap<>();
+        HashMap<String,Boolean> hashMap = new HashMap<String,Boolean>();
         for(EtcdKeysResponse.EtcdNode node : etcdKeysResponse.node.nodes)
         {
             String key = getKey(node.key);

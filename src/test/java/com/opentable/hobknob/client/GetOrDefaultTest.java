@@ -8,7 +8,7 @@ import org.junit.rules.ExpectedException;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-public class Get extends TestBase
+public class GetOrDefaultTest extends TestBase
 {
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -19,37 +19,30 @@ public class Get extends TestBase
     }
 
     @Test
-    public void simple_get_true() throws Exception {
+    public void default_not_used_when_key_exists() throws Exception {
         given_a_toggle("app1", "toggle1", "true");
-        boolean value = when_I_get("toggle1");
+        boolean value = when_I_get_with_default("toggle1", false);
         assertThat(value, equalTo(true));
     }
 
     @Test
-    public void simple_get_false() throws Exception {
-        given_a_toggle("app1", "toggle1", "false");
-        boolean value = when_I_get("toggle1");
-        assertThat(value, equalTo(false));
-    }
-
-    @Test
-    public void Get_throws_exception_when_key_does_not_exist() throws Exception {
-        exception.expect(Exception.class);
-        when_I_get("toggle3");
+    public void default_is_used_when_key_does_not_exist() throws Exception {
+        boolean value = when_I_get_with_default("toggle1", true);
+        assertThat(value, equalTo(true));
     }
 
     @Test
     public void Applications_do_not_clash() throws Exception {
         given_a_toggle("app1", "toggle1", "true");
         given_a_toggle("app2", "toggle1", "false");
-        boolean value = when_I_get("toggle1");
+        boolean value = when_I_get_with_default("toggle1", false);
         assertThat(value, equalTo(true));
     }
 
     @Test
-    public void Bad_etcd_value_throws_exception() throws Exception {
+    public void Bad_etcd_value_forces_default_to_be_returned() throws Exception {
         given_a_toggle("app1", "toggle1", "bad");
-        exception.expect(Exception.class);
-        when_I_get("toggle1");
+        boolean value = when_I_get_with_default("toggle1", true);
+        assertThat(value, equalTo(true));
     }
 }
