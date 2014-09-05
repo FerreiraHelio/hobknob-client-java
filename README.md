@@ -27,7 +27,9 @@ mvn clean install
 This will, amongst other things, output a .jar file into the 'target' directory.
 
 ##### Note:
-By default, the tests are run in the Maven install task. The tests are exclusively end-to-end and require a working instance of Etcd installed locally on port 4001 (the host and port can be configured in the TestBase class).
+By default, the tests are run in the Maven install task.
+The tests are exclusively end-to-end and require a working instance of Etcd installed locally on port 4001 (the host and port can be configured in the TestBase class).
+There is a Vagrantfile for convenience that sets up Vagrant to host Etcd, simply by using `vagrant up`.
 
 If you *do not* want to run the tests when building the project, use:
 
