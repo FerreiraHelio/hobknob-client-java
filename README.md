@@ -113,8 +113,8 @@ The file should look something like the following:
   <servers>
       <server>
           <id>ossrh</id>
-          <username>username</username>
-          <password>password</password>
+          <username>jira_username</username>
+          <password>jira_password</password>
       </server>
   </servers>
   <profiles>
