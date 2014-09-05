@@ -114,7 +114,7 @@ The file should look something like the following:
       <server>
           <id>ossrh</id>
           <username>username</username>
-          <password>WizardMonkey1</password>
+          <password>password</password>
       </server>
   </servers>
   <profiles>
@@ -125,7 +125,7 @@ The file should look something like the following:
       </activation>
       <properties>
         <gpg.executable>gpg2</gpg.executable>
-        <gpg.passphrase>WizardMonkey1</gpg.passphrase>
+        <gpg.passphrase>password</gpg.passphrase>
       </properties>
     </profile>
   </profiles>
