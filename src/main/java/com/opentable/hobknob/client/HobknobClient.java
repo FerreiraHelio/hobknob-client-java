@@ -32,8 +32,8 @@ public class HobknobClient implements CacheUpdatedEvent, CacheUpdateFailedEvent 
         return value != null ? value : defaultValue;
     }
 
-    private List<CacheUpdatedEvent> _cacheUpdatedListeners = new ArrayList<CacheUpdatedEvent>();
-    private List<CacheUpdateFailedEvent> _cacheUpdateFailedListeners = new ArrayList<CacheUpdateFailedEvent>();
+    private List<CacheUpdatedEvent> _cacheUpdatedListeners = new ArrayList<>();
+    private List<CacheUpdateFailedEvent> _cacheUpdateFailedListeners = new ArrayList<>();
 
     public void addCacheUpdatedLstener(CacheUpdatedEvent listener) {
         _cacheUpdatedListeners.add(listener);

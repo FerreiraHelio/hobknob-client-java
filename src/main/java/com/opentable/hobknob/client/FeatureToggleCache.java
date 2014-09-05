@@ -71,9 +71,9 @@ public class FeatureToggleCache {
 
     private List<CacheUpdate> GetUpdates(HashMap<String, Boolean> existingToggles, HashMap<String, Boolean> newToggles) {
 
-        HashMap<String, Boolean> existingNotNull = existingToggles != null ? existingToggles : new HashMap<String, Boolean>();
+        HashMap<String, Boolean> existingNotNull = existingToggles != null ? existingToggles : new HashMap<>();
 
-        List<CacheUpdate> updates = new ArrayList<CacheUpdate>();
+        List<CacheUpdate> updates = new ArrayList<>();
         for (Map.Entry<String, Boolean> newToggle : newToggles.entrySet())
         {
             Boolean existingValue = existingNotNull.getOrDefault(newToggle.getKey(), null);
@@ -100,8 +100,8 @@ public class FeatureToggleCache {
         return updates;
     }
 
-    private List<CacheUpdatedEvent> _cacheUpdatedListeners = new ArrayList<CacheUpdatedEvent>();
-    private List<CacheUpdateFailedEvent> _cacheUpdateFailedListeners = new ArrayList<CacheUpdateFailedEvent>();
+    private List<CacheUpdatedEvent> _cacheUpdatedListeners = new ArrayList<>();
+    private List<CacheUpdateFailedEvent> _cacheUpdateFailedListeners = new ArrayList<>();
 
     public void addCacheUpdatedLstener(CacheUpdatedEvent listener) {
         _cacheUpdatedListeners.add(listener);

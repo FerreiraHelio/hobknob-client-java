@@ -22,11 +22,11 @@ public class FeatureToggleProvider
 
         // todo: handle errors
 
-        HashMap<String,Boolean> hashMap = new HashMap<String,Boolean>();
+        HashMap<String,Boolean> hashMap = new HashMap<>();
         for(EtcdKeysResponse.EtcdNode node : etcdKeysResponse.node.nodes)
         {
             String key = getKey(node.key);
-            Boolean featureToggleValue = parseFeatureToggleValue(node.key, node.value);
+            Boolean featureToggleValue = parseFeatureToggleValue(node.value);
 
             if (featureToggleValue != null)
             {
@@ -42,7 +42,7 @@ public class FeatureToggleProvider
         return parts[parts.length - 1];
     }
 
-    private static Boolean parseFeatureToggleValue(String key, String value)
+    private static Boolean parseFeatureToggleValue(String value)
     {
         if (value == null) return null;
 
