@@ -48,8 +48,19 @@ public class TestBase
         _cacheUpdateIntervalMs = cacheUpdateIntervalMs;
     }
 
-    protected void given_a_toggle(String applicationName, String toggleName, String value) {
-        String key = String.format("v1/toggles/%s/%s", applicationName, toggleName);
+    protected void given_a_toggle(String applicationName, String featureName, String value) {
+        String key = String.format("v1/toggles/%s/%s", applicationName, featureName);
+        try {
+            _etcdClient.put(key, value).send().get();
+        }
+        catch(Exception ex){
+            fail(ex.toString());
+        }
+        _applicationKeysToClearOnTearDown.add(applicationName);
+    }
+
+    protected void given_a_toggle(String applicationName, String featureName, String toggleName, String value) {
+        String key = String.format("v1/toggles/%s/%s/%s", applicationName, featureName, toggleName);
         try {
             _etcdClient.put(key, value).send().get();
         }
@@ -64,18 +75,28 @@ public class TestBase
         _etcdClient.delete(key).send().get();
     }
 
-    protected boolean when_I_get(String toggleName) throws Exception {
+    protected boolean when_I_get(String featureName) throws Exception {
         _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
-        return _hobknobClient.get(toggleName);
+        return _hobknobClient.get(featureName);
+    }
+
+    protected boolean when_I_get(String featureName, String toggleName) throws Exception {
+        _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
+        return _hobknobClient.get(featureName, toggleName);
     }
 
     protected boolean when_I_get_without_initialising_a_new_hobknob_instance(String toggleName) throws Exception {
         return _hobknobClient.get(toggleName);
     }
 
-    protected boolean when_I_get_with_default(String toggleName, boolean defaultValue) throws Exception {
+    protected boolean when_I_get_with_default(String featureName, boolean defaultValue) throws Exception {
         _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
-        return _hobknobClient.getOrDefault(toggleName, defaultValue);
+        return _hobknobClient.getOrDefault(featureName, defaultValue);
+    }
+
+    protected boolean when_I_get_with_default(String featureName, String toggleName, boolean defaultValue) throws Exception {
+        _hobknobClient = new HobknobClientFactory().create(EtcdHost, EtcdPort, _applicationName, _cacheUpdateIntervalMs);
+        return _hobknobClient.getOrDefault(featureName, toggleName, defaultValue);
     }
 
     protected HobknobClient create_hobknob_client() throws Exception {

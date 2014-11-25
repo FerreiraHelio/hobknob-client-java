@@ -16,19 +16,35 @@ public class HobknobClient implements CacheUpdatedEvent, CacheUpdateFailedEvent 
         _featureToggleCache.addCacheUpdatedLstener(this);
     }
 
-    public boolean get(String toggleName) throws Exception {
+    public boolean get(String featureName) throws Exception {
 
-        Boolean value = _featureToggleCache.get(toggleName);
+        Boolean value = _featureToggleCache.get(featureName);
         if (value == null)
         {
-            throw new Exception(String.format("Key not found for toggle %s/%s", _applicationName, toggleName));
+            throw new Exception(String.format("Key not found for toggle %s/%s", _applicationName, featureName));
         }
         return value;
     }
 
-    public boolean getOrDefault(String featureToggleName, boolean defaultValue) {
+    public boolean get(String featureName, String toggleName) throws Exception {
 
-        Boolean value =_featureToggleCache.get(featureToggleName);
+        Boolean value = _featureToggleCache.get(featureName, toggleName);
+        if (value == null)
+        {
+            throw new Exception(String.format("Key not found for toggle %s/%s/%s", _applicationName, featureName, toggleName));
+        }
+        return value;
+    }
+
+    public boolean getOrDefault(String featureName, boolean defaultValue) {
+
+        Boolean value =_featureToggleCache.get(featureName);
+        return value != null ? value : defaultValue;
+    }
+
+    public boolean getOrDefault(String featureName, String toggleName, boolean defaultValue) {
+
+        Boolean value =_featureToggleCache.get(featureName, toggleName);
         return value != null ? value : defaultValue;
     }
 

@@ -9,14 +9,16 @@ public class FeatureToggleCache {
 
     private FeatureToggleProvider _featureToggleProvider;
     private int _updateIntervalMs;
+    private String _applicationName;
     private Timer _timer;
     private HashMap<String, Boolean> _cache;
     private CountDownLatch _countDownLatch;
     private Exception _updateException;
 
-    public FeatureToggleCache(FeatureToggleProvider featureToggleProvider, int cacheUpdateIntervalMs) throws IllegalArgumentException {
+    public FeatureToggleCache(FeatureToggleProvider featureToggleProvider, int cacheUpdateIntervalMs, String applicationName) throws IllegalArgumentException {
         _featureToggleProvider = featureToggleProvider;
         _updateIntervalMs = cacheUpdateIntervalMs;
+        _applicationName = applicationName;
         _countDownLatch = new CountDownLatch(1);
         _timer = new Timer("CacheUpdateTimer");
 
@@ -43,8 +45,13 @@ public class FeatureToggleCache {
         }
     }
 
-    public Boolean get(String featureToggleName) {
-        return _cache.getOrDefault(featureToggleName, null);
+    public Boolean get(String featureName) {
+        return get(featureName, null);
+    }
+
+    public Boolean get(String featureName, String toggleName) {
+        String toggleNameSuffix = toggleName != null ? "/" + toggleName : "";
+        return _cache.getOrDefault("/v1/toggles/" + _applicationName + "/" + featureName + toggleNameSuffix, null);
     }
 
     private void updateCache() {

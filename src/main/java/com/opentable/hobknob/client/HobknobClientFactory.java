@@ -12,7 +12,7 @@ public class HobknobClientFactory {
 
         EtcdClient etcdClient = new EtcdClient(URI.create(applicationDirectoryKey));
         FeatureToggleProvider featureToggleProvider = new FeatureToggleProvider(etcdClient, applicationName);
-        FeatureToggleCache featureToggleCache = new FeatureToggleCache(featureToggleProvider, cacheUpdateIntervalMs);
+        FeatureToggleCache featureToggleCache = new FeatureToggleCache(featureToggleProvider, cacheUpdateIntervalMs, applicationName);
         HobknobClient hobknobClient = new HobknobClient(featureToggleCache, applicationName);
 
         featureToggleCache.initialize(cacheInitialisationTimeoutMs);
