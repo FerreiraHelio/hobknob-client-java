@@ -48,16 +48,20 @@ int cacheUpdateIntervalMs = 60 * 1000;
 
 HobknobClient client = new HobknobClientFactory().create(etcdHost, etcdPort, applicationName, cacheUpdateIntervalMs);
 
-boolean toggle1Status = client.get("Toggle1"); // true
-boolean toggle2Status = client.get("ToggleThatDoesNotExist"); // throws exception
-boolean toggle3Status = client.getOrDefault("ToggleThatDoesNotExist", true); // true
+boolean toggle1Status = client.get("Feature1"); // true
+boolean toggle2Status = client.get("FeatureThatDoesNotExist"); // throws exception
+boolean toggle3Status = client.getOrDefault("FeatureThatDoesNotExist", true); // true
+
+boolean multiToggle1Status = client.get("Feature1", "com"); // true
+boolean multiToggle2Status = client.get("Feature1", "ToggleThatDoesNotExist"); // throws exception
+boolean multiToggle3Status = client.getOrDefault("Feature1", "ToggleThatDoesNotExist", true); // true
 
 ```
 
 ## Etcd
 
 Feature toggles are stored in Etcd using the following convention:
-`http://host:port/v2/keys/v1/toggles/applicationName/toggleName`
+`http://host:port/v2/keys/v1/toggles/applicationName/featureName/toggleName`
 
 ## API
 
@@ -70,19 +74,33 @@ Creates a new feature toggle client.
 - `applicationName` the name of the application used to find feature toggles
 - `cacheUpdateIntervalMs` interval for the cache update in milliseconds, which loads all the applications toggles into memory
 
-### client.get(String toggleName)
+### client.get(String featureName)
 
-Gets the boolean value of a feature toggle if it exists, otherwise throw exception
+Gets the boolean value of a simple feature toggle if it exists, otherwise throw exception
 
-- `toggleName` the name of the toggle, used with the application name to get the feature toggle value
+- `featureName` the name of the feature toggle, used with the application name to get the feature toggle value
 
+### client.get(String featureName, String toggleName)
 
-### client.getOrDefault(String toggleName, boolean defaultValue)
+Gets the boolean value of a multi feature toggle if it exists, otherwise throw exception
 
-Gets the boolean value of a feature toggle if it exists, otherwise return the default value
+- `featureName` the name of the feature
+- `toggleName` the name of the toggle - only specify when getting values for non-simple feature toggles
 
-- `toggleName` the name of the toggle, used with the application name to get the feature toggle value
-- `defaultValue` the value to return if the toggle value is not found
+### client.getOrDefault(String featureName, boolean defaultValue)
+
+Gets the boolean value of a simple feature toggle if it exists, otherwise return the default value
+
+- `featureName` the name of the feature, used with the application name to get the feature toggle value
+- `defaultValue` the value to return if the feature value is not found
+
+### client.getOrDefault(String featureName, String toggleName, boolean defaultValue)
+
+Gets the boolean value of a multi feature toggle if it exists, otherwise return the default value
+
+- `featureName` the name of the feature
+- `toggleName` the name of the toggle - only specify when getting values for non-simple feature toggles
+- `defaultValue` the value to return if the feature toggle value is not found
 
 ## Publishing to Maven repository
 

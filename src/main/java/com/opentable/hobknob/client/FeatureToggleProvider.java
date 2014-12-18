@@ -20,26 +20,31 @@ public class FeatureToggleProvider
     {
         EtcdKeysResponse etcdKeysResponse = _etcdClient.getDir(_applicationDirectoryKey).recursive().send().get();
 
-        // todo: handle errors
-
         HashMap<String,Boolean> hashMap = new HashMap<>();
-        for(EtcdKeysResponse.EtcdNode node : etcdKeysResponse.node.nodes)
+        for(EtcdKeysResponse.EtcdNode featureNode : etcdKeysResponse.node.nodes)
         {
-            String key = getKey(node.key);
-            Boolean featureToggleValue = parseFeatureToggleValue(node.value);
-
-            if (featureToggleValue != null)
+            if (featureNode.dir)
             {
-                hashMap.put(key, featureToggleValue);
+                for(EtcdKeysResponse.EtcdNode toggleNode : featureNode.nodes)
+                {
+                    if (toggleNode.key.endsWith("@meta")) continue;
+                    addToggleValueToMap(toggleNode, hashMap);
+                }
+            }
+            else
+            {
+                addToggleValueToMap(featureNode, hashMap);
             }
         }
         return hashMap;
     }
 
-    private static String getKey(String path)
-    {
-        String[] parts = path.split("/");
-        return parts[parts.length - 1];
+    private void addToggleValueToMap(EtcdKeysResponse.EtcdNode node, HashMap<String,Boolean> hashMap){
+        Boolean featureToggleValue = parseFeatureToggleValue(node.value);
+        if (featureToggleValue != null)
+        {
+            hashMap.put(node.key, featureToggleValue);
+        }
     }
 
     private static Boolean parseFeatureToggleValue(String value)

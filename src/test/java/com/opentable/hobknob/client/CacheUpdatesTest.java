@@ -14,17 +14,19 @@ import static org.junit.Assert.assertThat;
 
 public class CacheUpdatesTest extends TestBase
 {
+    String applicationName = "cacheUpdateTest";
+
     @Before
     public void SetUp() throws Exception {
         TearDown();
         set_cache_update_interval(1000);
-        set_application_name("cacheUpdateTest");
+        set_application_name(applicationName);
     }
 
     @After
     public void TearDown() throws Exception {
         try {
-            _etcdClient.deleteDir("v1/toggles/cacheUpdateTest").recursive().send().get();
+            _etcdClient.deleteDir("v1/toggles/" + applicationName).recursive().send().get();
         }
         catch (Exception ex) {
         }
@@ -32,11 +34,11 @@ public class CacheUpdatesTest extends TestBase
 
     @Test
     public void Cache_is_not_updated_when_update_interval_is_not_passed() throws Exception {
-        given_a_toggle("cacheUpdateTest", "toggle1", "true");
+        given_a_toggle(applicationName, "toggle1", "true");
         boolean value = when_I_get("toggle1");
         assertThat(value, equalTo(true));
 
-        given_a_toggle("cacheUpdateTest", "toggle1", "false");
+        given_a_toggle(applicationName, "toggle1", "false");
 
         boolean value2 = when_I_get_without_initialising_a_new_hobknob_instance("toggle1");
         assertThat(value2, equalTo(true));
@@ -44,11 +46,11 @@ public class CacheUpdatesTest extends TestBase
 
     @Test
     public void Cache_is_updated_when_update_interval_is_passed() throws Exception {
-        given_a_toggle("cacheUpdateTest", "toggle1", "true");
+        given_a_toggle(applicationName, "toggle1", "true");
         boolean value = when_I_get("toggle1");
         assertThat(value, equalTo(true));
 
-        given_a_toggle("cacheUpdateTest", "toggle1", "false");
+        given_a_toggle(applicationName, "toggle1", "false");
         Thread.sleep(1200);
 
         boolean value2 = when_I_get_without_initialising_a_new_hobknob_instance("toggle1");
@@ -58,15 +60,15 @@ public class CacheUpdatesTest extends TestBase
 
     @Test
     public void Cache_updated_information_is_correct() throws Exception {
-        given_a_toggle("cacheUpdateTest", "existingNoChange", "true");
-        given_a_toggle("cacheUpdateTest", "existingChange", "true");
-        given_a_toggle("cacheUpdateTest", "existingRemoved", "true");
+        given_a_toggle(applicationName, "existingNoChange", "true");
+        given_a_toggle(applicationName, "existingChange", "true");
+        given_a_toggle(applicationName, "existingRemoved", "true");
 
         HobknobClient hobknobClient = create_hobknob_client();
 
-        given_a_toggle("cacheUpdateTest", "newToggle", "true");
-        given_a_toggle("cacheUpdateTest", "existingChange", "false");
-        given_a_toggle_is_removed("cacheUpdateTest", "existingRemoved");
+        given_a_toggle(applicationName, "newToggle", "true");
+        given_a_toggle(applicationName, "existingChange", "false");
+        given_a_toggle_is_removed(applicationName, "existingRemoved");
 
         List<CacheUpdate> cacheUpdates = new ArrayList<>();
 
@@ -88,7 +90,7 @@ public class CacheUpdatesTest extends TestBase
 
     private void assertToggleUpdate(HashMap<String, CacheUpdate> updates, String key, Boolean oldValue, Boolean newValue) throws Exception
     {
-        CacheUpdate cacheUpdate = updates.get(key);
+        CacheUpdate cacheUpdate = updates.get("/v1/toggles/" + applicationName + "/" + key);
         assertThat(cacheUpdate.OldValue, equalTo(oldValue));
         assertThat(cacheUpdate.NewValue, equalTo(newValue));
     }
